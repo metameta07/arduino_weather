@@ -42,44 +42,44 @@ void loop () {
  
 
 
-  int t25;
-  int h25;
-  int t50;
-  int h50;
-  int t75;
-  int h75;
-  int t1;
-  int h1;
-  int o;
+  char t25[10];
+  char h25[10];
+  char t50[10];
+  char h50[10];
+  char t75[10];
+  char h75[10];
+  char t1[10];
+  char h1[10];
+  char o[10];
 
 
 
   // Read values from the sensor 25 cm
-  t25 = sht1x_1.readTemperatureC();
-  h25 = sht1x_1.readHumidity();
+  format(sht1x_1.readTemperatureC(), t25);
+  format(sht1x_1.readHumidity(), h25);
   Serial1.print(t25);
   Serial1.print(h25);
   
 
 
  // Read values from the sensor 50 cm
-  t50 = sht1x_2.readTemperatureC();
-  h50 = sht1x_2.readHumidity();
+  format(sht1x_2.readTemperatureC(), t50);
+  format(sht1x_2.readHumidity(), h50);
   Serial1.print(t50);
   Serial1.print(h50);
   
 
  // Read values from the sensor 75 cm
-  t75 = sht1x_3.readTemperatureC();
-  h75 = sht1x_3.readHumidity();
+  format(sht1x_3.readTemperatureC(), t75);
+  format(sht1x_3.readHumidity(), h75);
   Serial1.print(t75);
   Serial1.print(h75);
 
 
 
  // Read values from the sensor 1 m
-  t1 = sht1x_4.readTemperatureC();
-  h1 = sht1x_4.readHumidity();
+  format(sht1x_4.readTemperatureC(), t1);
+  format(sht1x_4.readHumidity(), h1);
   Serial1.print(t1);
   Serial1.print(h1);
 
@@ -98,7 +98,11 @@ void loop () {
   delay(100);
   Serial1.println("AT+HTTPINIT");  //Инициализация http сервиса
   delay(100);
-  Serial1.println("AT+HTTPPARA=\"URL\",\"http://api.pushingbox.com/pushingbox?devid=v7EB0C16B3DF61EB&t25=t25&h25=h25&t50=t50&h50=h50&t75=t75&h75=h75&t1=t1&h1=h1&o=o\"");
+
+  char strOut[200]; 
+  sprintf(strOut, "AT+HTTPPARA=\"URL\",\"http://api.pushingbox.com/pushingbox?devid=v810F5DBC791B54C&t25=%s&h25=%s&t50=%s&h50=%s&t75=%s&h75=%s&t1=%s&h1=%s\"", t25,h25,t50,h50,t75,h75,t1,h1);
+
+  Serial1.println(strOut);
   Serial1.println("AT+HTTPPARA=\"CID\",1");  //Установка CID параметра для http сессии
   delay(100);
   Serial1.println("AT+HTTPACTION=1");
@@ -141,8 +145,9 @@ void loop () {
     Serial.println(" %");
 
 
-    Serial.print(o);
-    Serial.print("осадки мм:   ");
+   
+    Serial.println("осадки мм:   ");
+    Serial.println(o);
 
 
 delay(6000);
@@ -213,6 +218,10 @@ delay(6000);
   ////////////////////////////////////////////////////////////////
 
 
+}
+
+void format(float value, char* result) {
+  dtostrf(value, 0, 2, result);
 }
 
 
